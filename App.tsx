@@ -158,6 +158,10 @@ function App() {
         body: formData
       });
 
+      if (!response.ok) {
+        throw new Error(`Servidor respondeu com status: ${response.status} ${response.statusText}`);
+      }
+
       const result = await response.json();
       console.log(result);
 
@@ -171,9 +175,10 @@ function App() {
         alert('Upload realizado, verifique o console para URL.');
       }
 
-    } catch (err) {
+    } catch (err: any) {
       console.error('Erro:', err);
-      alert('Erro ao gerar/enviar assinatura. Tente novamente.');
+      const msg = err && err.message ? err.message : String(err);
+      alert(`Erro ao gerar/enviar assinatura: ${msg}\n\nTente verificar o console (F12) se for erro de rede (CORS).`);
     } finally {
       setIsUploading(false);
     }
