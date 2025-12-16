@@ -44,7 +44,7 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
   return (
     <div
       ref={ref}
-      style={{ width: '620px', height: '250px' }}
+      style={{ width: '600px', height: '250px' }}
       className="bg-white relative flex overflow-hidden shadow-xl select-none"
     >
       {/* Background/Banner Layer (Absolute Full Size) */}

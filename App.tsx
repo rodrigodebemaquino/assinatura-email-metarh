@@ -303,14 +303,17 @@ function App() {
 
           <div className="space-y-4">
 
-            {/* Photo Moved to Top */}
-            <div className="pt-2 pb-4 border-b">
-              <label className="block text-sm font-bold mb-2">Sua Foto</label>
+            {/* Photo Section with more emphasis */}
+            <div className="p-4 bg-purple-50 border-2 border-dashed border-[#401669] rounded-xl relative group hover:bg-purple-100 transition-colors">
+              <label className="block text-base font-bold text-[#401669] mb-3 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                1. Escolha sua Foto
+              </label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handlePhotoUpload}
-                className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-[#401669] hover:file:bg-purple-100"
+                className="w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-[#401669] file:text-white hover:file:bg-[#2d0f4b] cursor-pointer"
               />
 
               {userData.photoUrl && (
