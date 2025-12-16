@@ -283,7 +283,7 @@ function App() {
       {/* Header */}
       <header className="bg-[#401669] text-white p-4 shadow-md">
         <div className="max-w-6xl mx-auto flex justify-center items-center">
-          <div className="w-64">
+          <div className="w-44">
             <MetarhLogoHorizontal />
           </div>
         </div>

@@ -13,10 +13,32 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
   onPhotoMouseDown,
   showBanner = true, // Por padrão mostra o banner
 }, ref) => {
-  // NOTA: Banner removido da geração devido a CORS
-  // A visualização mostra o banner, mas a imagem gerada não incluirá o banner
-  // para evitar erros de "Tainted Canvas"
   const BANNER_URL = "https://metarh.com.br/wp-content/uploads/assinaturas/Banner-assinatura.png";
+  const [bannerSrc, setBannerSrc] = React.useState<string>(BANNER_URL);
+
+  // Carregar banner como base64 para evitar CORS
+  React.useEffect(() => {
+    if (!showBanner) return;
+
+    const loadBanner = async () => {
+      try {
+        const response = await fetch(BANNER_URL);
+        const blob = await response.blob();
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (typeof reader.result === 'string') {
+            setBannerSrc(reader.result);
+          }
+        };
+        reader.readAsDataURL(blob);
+      } catch (error) {
+        console.warn('Erro ao carregar banner:', error);
+        // Mantém URL original como fallback
+      }
+    };
+
+    loadBanner();
+  }, [showBanner]);
 
   return (
     <div
@@ -27,11 +49,10 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
       {/* Background/Banner Layer (Absolute Full Size) */}
       {showBanner && (
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
-          {/* Banner na lateral direita com CORS habilitado */}
+          {/* Banner na lateral direita */}
           <img
-            src={BANNER_URL}
+            src={bannerSrc}
             alt="Campaign Banner"
-            crossOrigin="anonymous"
             className="absolute right-0 h-full w-auto object-cover pointer-events-none"
           />
         </div>
