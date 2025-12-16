@@ -1,0 +1,23 @@
+# CORS Configuration for Assinaturas METARH
+# Salvar como: wp-content/uploads/assinaturas/.htaccess
+
+<IfModule mod_headers.c>
+    # Permitir requisições do domínio Vercel
+    Header set Access-Control-Allow-Origin "https://assinatura-email-metarh.vercel.app"
+    Header set Access-Control-Allow-Methods "POST, GET, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+    Header set Access-Control-Allow-Credentials "true"
+    Header set Access-Control-Max-Age "86400"
+</IfModule>
+
+# Permitir acesso a arquivos PHP
+<Files "upload.php">
+    Order allow,deny
+    Allow from all
+</Files>
+
+# Permitir acesso a imagens PNG
+<FilesMatch "\.(png|jpg|jpeg)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
