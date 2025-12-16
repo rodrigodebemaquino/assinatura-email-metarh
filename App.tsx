@@ -389,14 +389,14 @@ function App() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold mb-1">E-mail</label>
+              <label className="block text-sm font-semibold mb-1">Website</label>
               <input
-                type="email"
-                name="email"
-                value={userData.email}
+                type="text"
+                name="website"
+                value={userData.website}
                 onChange={handleInputChange}
                 className="w-full border border-gray-300 p-2 rounded focus:ring-2 focus:ring-[#401669] outline-none"
-                placeholder="Ex: nome@metarh.com.br"
+                placeholder="Ex: www.metarh.com.br"
               />
             </div>
 
@@ -470,6 +470,7 @@ function App() {
                       <li>Abra as Configurações do Gmail → Assinatura</li>
                       <li>Clique no ícone de imagem (🖼️)</li>
                       <li>Cole a URL copiada</li>
+                      <li><strong>Selecione "Melhor ajuste"</strong> no tamanho da imagem</li>
                       <li>Salve as alterações</li>
                     </ol>
                   </div>

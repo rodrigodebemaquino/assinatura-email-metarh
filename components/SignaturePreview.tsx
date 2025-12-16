@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import { UserData } from '../types';
-import { EmailIcon, PhoneIcon } from './Icons';
+import { WebsiteIcon, PhoneIcon } from './Icons';
 
 interface SignaturePreviewProps {
   data: UserData;
@@ -112,18 +112,18 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
           {/* Separator Line */}
           <div className="w-full border-t border-dashed border-gray-400 my-3"></div>
 
-          {/* Contact Info - 10pt */}
+          {/* Contact Info - Telefone 12pt, Website 10pt */}
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
               <div className="w-4 text-[#A855F7] flex justify-center"><PhoneIcon /></div>
-              <span className="text-black font-normal leading-none" style={{ fontSize: '10pt' }}>
+              <span className="text-black font-normal leading-none" style={{ fontSize: '12pt' }}>
                 {data.phone || '11 99999-9999'}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 text-[#A855F7] flex justify-center"><EmailIcon /></div>
+              <div className="w-4 text-[#A855F7] flex justify-center"><WebsiteIcon /></div>
               <span className="text-black font-normal leading-none" style={{ fontSize: '10pt' }}>
-                {data.email || 'email@metarh.com.br'}
+                {data.website || 'www.metarh.com.br'}
               </span>
             </div>
           </div>
