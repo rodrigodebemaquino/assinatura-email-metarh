@@ -12,28 +12,39 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
   onPhotoMouseDown,
 }, ref) => {
   const BANNER_URL = "https://metarh.com.br/wp-content/uploads/assinaturas/Banner-assinatura.png";
-  const [bannerSrc, setBannerSrc] = React.useState<string>(BANNER_URL);
+  const [bannerConfig, setBannerConfig] = React.useState<{ src: string; crossOrigin?: "anonymous" }>({
+    src: BANNER_URL,
+    crossOrigin: undefined
+  });
 
   React.useEffect(() => {
-    // Attempt to preload image as blob to avoid CORS taint in canvas
+    let active = true;
     const loadBanner = async () => {
       try {
-        const resp = await fetch(BANNER_URL);
-        if (!resp.ok) throw new Error("Network response was not ok");
+        // Try to fetch as blob to see if CORS allows us
+        const resp = await fetch(BANNER_URL, { mode: 'cors' });
+        if (!resp.ok) throw new Error("CORS check failed or image missing");
+
         const blob = await resp.blob();
         const reader = new FileReader();
         reader.onloadend = () => {
-          if (typeof reader.result === 'string') {
-            setBannerSrc(reader.result);
+          if (active && typeof reader.result === 'string') {
+            // If we can read it, it's safe to use with crossOrigin or as dataURL
+            // Using dataURL is safest for html-to-image
+            setBannerConfig({ src: reader.result, crossOrigin: "anonymous" });
           }
         };
         reader.readAsDataURL(blob);
       } catch (e) {
-        console.warn("Could not preload banner as Base64 (likely CORS). Using direct URL. Canvas export might fail.", e);
-        // Fallback is already set to BANNER_URL
+        console.warn("Banner CORS loading failed. Falling back to direct URL (Generator might fail).", e);
+        if (active) {
+          // IMPORTANT: Do NOT use crossOrigin if the server doesn't support it, otherwise image won't load at all.
+          setBannerConfig({ src: BANNER_URL, crossOrigin: undefined });
+        }
       }
     };
     loadBanner();
+    return () => { active = false; };
   }, []);
 
   return (
@@ -46,9 +57,9 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
       <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
         {/* Fixed Banner at Right Side */}
         <img
-          src={bannerSrc}
+          src={bannerConfig.src}
           alt="Campaign Banner"
-          crossOrigin="anonymous"
+          {...(bannerConfig.crossOrigin ? { crossOrigin: bannerConfig.crossOrigin } : {})}
           className="absolute right-0 h-full w-auto object-cover pointer-events-none"
         />
       </div>
