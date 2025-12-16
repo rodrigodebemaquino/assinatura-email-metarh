@@ -19,6 +19,7 @@ function App() {
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
 
   const signatureRef = useRef<HTMLDivElement>(null);
+  const signatureGenerationRef = useRef<HTMLDivElement>(null); // Ref para geração sem banner
 
   // Global mouse up to stop dragging
   useEffect(() => {
@@ -130,7 +131,7 @@ function App() {
   };
 
   const handleGenerateAndUpload = async () => {
-    if (!signatureRef.current) return;
+    if (!signatureGenerationRef.current) return;
 
     setIsUploading(true);
     setUploadedUrl(null);
@@ -138,7 +139,7 @@ function App() {
     try {
       console.log("Iniciando geração...");
 
-      const blob = await toBlob(signatureRef.current, { quality: 1.0, pixelRatio: 2 });
+      const blob = await toBlob(signatureGenerationRef.current, { quality: 1.0, pixelRatio: 2 });
       if (!blob) throw new Error("Falha ao gerar o arquivo de imagem.");
 
       const cleanName = userData.name.trim().toLowerCase().split(/\s+/).join('-') || 'assinatura';
@@ -375,6 +376,15 @@ function App() {
                 ref={signatureRef}
                 data={userData}
                 onPhotoMouseDown={handlePhotoMouseDown}
+              />
+            </div>
+
+            {/* Componente invisível usado apenas para geração (sem banner para evitar CORS) */}
+            <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
+              <SignaturePreview
+                ref={signatureGenerationRef}
+                data={userData}
+                showBanner={false}
               />
             </div>
 

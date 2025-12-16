@@ -5,11 +5,13 @@ import { EmailIcon, PhoneIcon } from './Icons';
 interface SignaturePreviewProps {
   data: UserData;
   onPhotoMouseDown?: (e: React.MouseEvent) => void;
+  showBanner?: boolean; // Controla se o banner deve ser exibido
 }
 
 const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
   data,
   onPhotoMouseDown,
+  showBanner = true, // Por padrão mostra o banner
 }, ref) => {
   // NOTA: Banner removido da geração devido a CORS
   // A visualização mostra o banner, mas a imagem gerada não incluirá o banner
@@ -23,14 +25,16 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
       className="bg-white relative flex overflow-hidden shadow-xl select-none"
     >
       {/* Background/Banner Layer (Absolute Full Size) */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
-        {/* Fixed Banner at Right Side - SEM crossOrigin para evitar CORS na geração */}
-        <img
-          src={BANNER_URL}
-          alt="Campaign Banner"
-          className="absolute right-0 h-full w-auto object-cover pointer-events-none"
-        />
-      </div>
+      {showBanner && (
+        <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
+          {/* Fixed Banner at Right Side - SEM crossOrigin para evitar CORS na geração */}
+          <img
+            src={BANNER_URL}
+            alt="Campaign Banner"
+            className="absolute right-0 h-full w-auto object-cover pointer-events-none"
+          />
+        </div>
+      )}
 
       {/* Foreground Layer: Photo and Info (z-10) */}
       {/* Moved content 20px to the right again (pl-3 -> pl-8) */}
