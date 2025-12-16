@@ -119,7 +119,7 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
                 {data.phone || '11 99999-9999'}
               </span>
             </div>
-            <div className="flex items-center gap-2" style={{ marginTop: '20px' }}>
+            <div className="flex items-center gap-2" style={{ marginTop: '5px' }}>
               <div className="w-4 text-[#A855F7] flex justify-center"><WebsiteIcon /></div>
               <span className="text-black font-bold leading-none" style={{ fontSize: '10pt' }}>
                 {data.website || 'www.metarh.com.br'}
@@ -128,11 +128,11 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
           </div>
         </div>
 
-        {/* QR Code WhatsApp - Posicionado à direita do texto, no local do X */}
-        <div className="absolute" style={{ left: '440px', top: '50%', transform: 'translateY(-50%)', zIndex: 10 }}>
+        {/* QR Code WhatsApp - Posicionado à direita do texto, na área branca */}
+        <div className="absolute" style={{ left: '390px', top: '70%', transform: 'translateY(-50%)', zIndex: 10 }}>
           <QRCodeSVG
             value={`https://wa.me/55${data.phone.replace(/\D/g, '')}`}
-            size={80}
+            size={65}
             level="M"
             includeMargin={false}
           />
