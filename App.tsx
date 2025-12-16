@@ -136,8 +136,16 @@ function App() {
     setUploadedUrl(null);
 
     try {
-      const blob = await toBlob(signatureRef.current, { quality: 1.0, pixelRatio: 2 });
-      if (!blob) throw new Error("Falha ao gerar imagem");
+      console.log("Iniciando geração...");
+      let blob;
+      try {
+        blob = await toBlob(signatureRef.current, { quality: 1.0, pixelRatio: 2 });
+      } catch (blobErr) {
+        console.error(blobErr);
+        throw new Error("Erro ao gerar imagem (Possível bloqueio CORS do banner).");
+      }
+
+      if (!blob) throw new Error("Falha ao gerar o arquivo de imagem.");
 
       const cleanName = userData.name.trim().toLowerCase().split(/\s+/).join('-') || 'assinatura';
       const file = new File([blob], `${cleanName}.png`, { type: 'image/png' });
@@ -145,35 +153,51 @@ function App() {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch('https://metarh.com.br/wp-content/uploads/assinaturas/upload.php', {
+      const endpoint = 'https://metarh.com.br/wp-content/uploads/assinaturas/upload.php';
+      console.log(`Enviando para ${endpoint}`);
+
+      // Usando fetch normal. 
+      // Se der CORS, vai cair no catch com 'Failed to fetch'.
+      const response = await fetch(endpoint, {
         method: 'POST',
-        headers: {
-          'Authorization': 'Bearer METARH2026#4886'
-        },
+        headers: { 'Authorization': 'Bearer METARH2026#4886' },
         body: formData
       });
 
+      const responseText = await response.text();
+      console.log("Response:", response.status, responseText);
+
       if (!response.ok) {
-        throw new Error(`Servidor respondeu com status: ${response.status} ${response.statusText}`);
+        throw new Error(`Erro Servidor (${response.status}): ${responseText.slice(0, 150)}`);
       }
 
-      const result = await response.json();
-      console.log(result);
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch (e) {
+        throw new Error(`Resposta inválida do servidor: ${responseText.slice(0, 100)}`);
+      }
+
+      console.log("JSON Parseado:", result);
 
       if (result && (result.url || result.link || typeof result === 'string')) {
         const url = result.url || result.link || result;
         setUploadedUrl(url);
       } else if (result && result.error) {
-        alert('Erro ao subir imagem: ' + result.error);
+        throw new Error('Servidor retornou erro: ' + result.error);
       } else {
-        // Fallback if structure is unknown but successful
-        alert('Upload realizado, verifique o console para URL.');
+        alert('Upload feito, mas retorno desconhecido. Veja console.');
+        console.warn("Resposta estranha:", result);
       }
 
     } catch (err: any) {
       console.error('Erro:', err);
       const msg = err && err.message ? err.message : String(err);
-      alert(`Erro ao gerar/enviar assinatura: ${msg}\n\nTente verificar o console (F12) se for erro de rede (CORS).`);
+      if (msg.includes("Failed to fetch")) {
+        alert("Erro de Conexão/CORS. O servidor de upload bloqueou a requisição deste site.");
+      } else {
+        alert(`Erro: ${msg}`);
+      }
     } finally {
       setIsUploading(false);
     }
