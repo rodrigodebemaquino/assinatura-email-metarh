@@ -14,9 +14,9 @@ export interface AdminData {
 }
 
 export const DEFAULT_USER_DATA: UserData = {
-  name: 'Rodrigo Aquino',
-  role: 'Marketing',
-  phone: '11 99648-6816',
+  name: '',
+  role: '',
+  phone: '',
   website: 'www.metarh.com.br',
   photoUrl: null,
   photoScale: 1,

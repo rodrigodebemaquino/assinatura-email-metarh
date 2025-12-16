@@ -7,8 +7,8 @@ import { MetarhLogoHorizontal } from './components/Icons';
 function App() {
   // State
   const [userData, setUserData] = useState<UserData>(DEFAULT_USER_DATA);
-  const [ddd, setDdd] = useState('11');
-  const [phonePart, setPhonePart] = useState('99648-6816');
+  const [ddd, setDdd] = useState('');
+  const [phonePart, setPhonePart] = useState('');
 
   // Drag state
   const [dragTarget, setDragTarget] = useState<'photo' | null>(null);
@@ -59,7 +59,11 @@ function App() {
 
   // Sync phone parts to userData
   useEffect(() => {
-    setUserData(prev => ({ ...prev, phone: `${ddd} ${phonePart}` }));
+    if (ddd || phonePart) {
+      setUserData(prev => ({ ...prev, phone: `${ddd} ${phonePart}` }));
+    } else {
+      setUserData(prev => ({ ...prev, phone: '' }));
+    }
   }, [ddd, phonePart]);
 
 
