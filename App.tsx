@@ -326,7 +326,7 @@ function App() {
                       </div>
                       <input
                         type="range"
-                        min="1"
+                        min="0"
                         max="3"
                         step="0.05"
                         value={userData.photoScale}

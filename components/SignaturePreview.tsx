@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 import { UserData } from '../types';
 import { WebsiteIcon, PhoneIcon } from './Icons';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface SignaturePreviewProps {
   data: UserData;
@@ -74,14 +75,12 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
               <img
                 src={data.photoUrl}
                 alt="User"
-                className="absolute max-w-none"
+                className="w-full h-full"
+                draggable={false}
                 style={{
-                  top: '50%',
-                  left: '50%',
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  transform: `translate(-50%, -50%) translate(${data.photoX}px, ${data.photoY}px) scale(${data.photoScale})`,
+                  objectFit: 'none',
+                  transform: `scale(${data.photoScale}) translate(${data.photoX}px, ${data.photoY}px)`,
+                  transformOrigin: 'center',
                   pointerEvents: 'none'
                 }}
               />
@@ -120,13 +119,23 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
                 {data.phone || '11 99999-9999'}
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" style={{ marginTop: '20px' }}>
               <div className="w-4 text-[#A855F7] flex justify-center"><WebsiteIcon /></div>
-              <span className="text-black font-normal leading-none" style={{ fontSize: '10pt' }}>
+              <span className="text-black font-bold leading-none" style={{ fontSize: '10pt' }}>
                 {data.website || 'www.metarh.com.br'}
               </span>
             </div>
           </div>
+        </div>
+
+        {/* QR Code WhatsApp - Posicionado à direita do texto, no local do X */}
+        <div className="absolute" style={{ left: '440px', top: '50%', transform: 'translateY(-50%)', zIndex: 10 }}>
+          <QRCodeSVG
+            value={`https://wa.me/55${data.phone.replace(/\D/g, '')}`}
+            size={80}
+            level="M"
+            includeMargin={false}
+          />
         </div>
       </div>
     </div>
