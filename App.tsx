@@ -139,7 +139,12 @@ function App() {
     try {
       console.log("Iniciando geração...");
 
-      const blob = await toBlob(signatureGenerationRef.current, { quality: 1.0, pixelRatio: 2 });
+      // Gerar imagem com alta qualidade (pixelRatio 3 = 3x resolução)
+      const blob = await toBlob(signatureGenerationRef.current, {
+        quality: 1.0,      // Qualidade máxima
+        pixelRatio: 3,     // 3x resolução (1860x750px)
+        cacheBust: true    // Evita cache
+      });
       if (!blob) throw new Error("Falha ao gerar o arquivo de imagem.");
 
       // Gerar nome do arquivo: nome-departamento.png
@@ -410,17 +415,17 @@ function App() {
               />
             </div>
 
-            {/* Componente invisível usado apenas para geração (sem banner para evitar CORS) */}
+            {/* Componente invisível usado para geração COM banner (CORS configurado) */}
             <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
               <SignaturePreview
                 ref={signatureGenerationRef}
                 data={userData}
-                showBanner={false}
+                showBanner={true}
               />
             </div>
 
             <p className="text-[10px] text-gray-400 text-center max-w-[600px] mt-2 mb-2">
-              <strong>Importante:</strong> O banner lateral NÃO será incluído na imagem gerada devido a restrições de segurança do navegador (CORS). A assinatura gerada conterá apenas sua foto, nome e informações de contato.
+              ✨ A assinatura gerada incluirá o banner da campanha na lateral direita, sua foto, nome e informações de contato em alta qualidade.
             </p>
 
             <div className="text-center space-y-4 w-full max-w-[620px]">

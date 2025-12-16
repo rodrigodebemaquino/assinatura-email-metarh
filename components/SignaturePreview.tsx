@@ -27,10 +27,11 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
       {/* Background/Banner Layer (Absolute Full Size) */}
       {showBanner && (
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
-          {/* Fixed Banner at Right Side - SEM crossOrigin para evitar CORS na geração */}
+          {/* Banner na lateral direita com CORS habilitado */}
           <img
             src={BANNER_URL}
             alt="Campaign Banner"
+            crossOrigin="anonymous"
             className="absolute right-0 h-full w-auto object-cover pointer-events-none"
           />
         </div>
