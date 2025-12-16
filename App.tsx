@@ -142,8 +142,12 @@ function App() {
       const blob = await toBlob(signatureGenerationRef.current, { quality: 1.0, pixelRatio: 2 });
       if (!blob) throw new Error("Falha ao gerar o arquivo de imagem.");
 
-      const cleanName = userData.name.trim().toLowerCase().split(/\s+/).join('-') || 'assinatura';
-      const file = new File([blob], `${cleanName}.png`, { type: 'image/png' });
+      // Gerar nome do arquivo: nome-departamento.png
+      const cleanName = userData.name.trim().toLowerCase().split(/\s+/).join('-');
+      const cleanRole = userData.role.trim().toLowerCase().split(/\s+/).join('-');
+      const fileName = `${cleanName}-${cleanRole}.png`;
+
+      const file = new File([blob], fileName, { type: 'image/png' });
 
       const formData = new FormData();
       formData.append('file', file);
@@ -423,42 +427,48 @@ function App() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <h3 className="text-lg font-medium text-gray-900">Assinatura Pronta!</h3>
+                    <h3 className="text-lg font-medium text-gray-900">Assinatura Gerada com Sucesso!</h3>
+                    <p className="text-sm text-gray-500 mt-1">Sua imagem está hospedada e pronta para usar</p>
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 className="text-sm font-semibold text-blue-900 mb-2">📧 Como usar no Gmail:</h4>
+                    <ol className="text-xs text-blue-800 space-y-1 list-decimal list-inside">
+                      <li>Copie a URL abaixo</li>
+                      <li>Abra as Configurações do Gmail → Assinatura</li>
+                      <li>Clique no ícone de imagem (🖼️)</li>
+                      <li>Cole a URL copiada</li>
+                      <li>Salve as alterações</li>
+                    </ol>
                   </div>
 
                   <div className="flex flex-col gap-3">
-                    <input
-                      type="text"
-                      readOnly
-                      value={uploadedUrl}
-                      className="w-full text-sm bg-gray-50 border border-gray-200 rounded p-2 text-gray-500"
-                    />
-
-                    <div className="flex gap-2">
-                      <button
-                        onClick={handleCopyLink}
-                        className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded border border-gray-300 transition"
-                      >
-                        Copiar Link
-                      </button>
-                      <button
-                        onClick={handleCopyImage}
-                        className="flex-1 bg-[#401669] hover:bg-[#2d0f4b] text-white font-semibold py-2 px-4 rounded transition flex items-center justify-center gap-2"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                        Copiar Imagem
-                      </button>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1">URL da sua assinatura:</label>
+                      <input
+                        type="text"
+                        readOnly
+                        value={uploadedUrl}
+                        onClick={(e) => e.currentTarget.select()}
+                        className="w-full text-sm bg-gray-50 border border-gray-300 rounded p-3 text-gray-700 font-mono cursor-pointer hover:bg-gray-100"
+                        title="Clique para selecionar tudo"
+                      />
                     </div>
+
+                    <button
+                      onClick={handleCopyLink}
+                      className="w-full bg-[#401669] hover:bg-[#2d0f4b] text-white font-semibold py-3 px-4 rounded transition flex items-center justify-center gap-2"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                      Copiar URL
+                    </button>
                   </div>
-                  <p className="text-xs text-gray-400 mt-2">
-                    Para usar no Gmail: Clique em "Copiar Imagem" e cole diretamente nas configurações de assinatura (Ctrl+V ou Cmd+V).
-                  </p>
 
                   <button
                     onClick={() => setUploadedUrl(null)}
-                    className="text-xs text-purple-600 underline mt-2"
+                    className="text-sm text-purple-600 hover:text-purple-800 underline mt-2"
                   >
-                    Gerar nova assinatura
+                    ← Gerar nova assinatura
                   </button>
                 </div>
               )}
