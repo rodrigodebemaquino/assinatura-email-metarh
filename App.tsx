@@ -143,9 +143,26 @@ function App() {
       if (!blob) throw new Error("Falha ao gerar o arquivo de imagem.");
 
       // Gerar nome do arquivo: nome-departamento.png
-      const cleanName = userData.name.trim().toLowerCase().split(/\s+/).join('-');
-      const cleanRole = userData.role.trim().toLowerCase().split(/\s+/).join('-');
+      const cleanName = userData.name
+        .trim()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+        .replace(/[^a-z0-9\s-]/g, '') // Remove caracteres especiais
+        .split(/\s+/)
+        .join('-');
+
+      const cleanRole = userData.role
+        .trim()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+        .replace(/[^a-z0-9\s-]/g, '') // Remove caracteres especiais
+        .split(/\s+/)
+        .join('-');
+
       const fileName = `${cleanName}-${cleanRole}.png`;
+      console.log('Nome do arquivo gerado:', fileName);
 
       const file = new File([blob], fileName, { type: 'image/png' });
 
