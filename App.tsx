@@ -7,6 +7,8 @@ import { MetarhLogoHorizontal } from './components/Icons';
 function App() {
   // State
   const [userData, setUserData] = useState<UserData>(DEFAULT_USER_DATA);
+  const [ddd, setDdd] = useState('11');
+  const [phonePart, setPhonePart] = useState('99648-6816');
 
   // Drag state
   const [dragTarget, setDragTarget] = useState<'photo' | null>(null);
@@ -54,12 +56,51 @@ function App() {
     };
   }, [dragTarget]);
 
+  // Sync phone parts to userData
+  useEffect(() => {
+    setUserData(prev => ({ ...prev, phone: `${ddd} ${phonePart}` }));
+  }, [ddd, phonePart]);
+
+
   // Handlers
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setUserData((prev) => ({ ...prev, [name]: value }));
     setUploadedUrl(null); // Reset upload if data changes
   };
+
+  const handleDddChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Only digits, max 2 chars
+    const val = e.target.value.replace(/\D/g, '').slice(0, 2);
+    setDdd(val);
+    setUploadedUrl(null);
+  };
+
+  const handlePhonePartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Only digits
+    const val = e.target.value.replace(/\D/g, '');
+    // Format: XXXXX-XXXX or XXXX-XXXX
+    // We will let them type and apply masking
+
+    let formatted = val;
+    if (val.length > 5) {
+      // Splitting at length-4 for the last part is standard for BR numbers
+      // but usually it's 4+4 or 5+4.
+      // Let's assume standard mobile 9 digits (5+4) or landline 8 digits (4+4).
+      // Simple logic: insert hyphen before the last 4 digits
+      if (val.length <= 8) {
+        formatted = val.replace(/(\d{4})(\d{0,4})/, '$1-$2');
+      } else {
+        formatted = val.replace(/(\d{5})(\d{0,4})/, '$1-$2');
+      }
+    }
+    // Limit to max chars (9 digits + 1 hyphen = 10 chars)
+    if (formatted.length > 10) formatted = formatted.slice(0, 10);
+
+    setPhonePart(formatted);
+    setUploadedUrl(null);
+  };
+
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -103,10 +144,17 @@ function App() {
 
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('METARH2026#4886', 'metarh-assinaturas-2025');
+
+      // Credentials provided by user
+      const user = 'Api_assinaturas';
+      const pass = 'YTzKQQ23FbKWFs1YCDwtpqRw';
+      const auth = btoa(`${user}:${pass}`);
 
       const response = await fetch('https://metarh.com.br/wp-json/assinaturas/v1/upload', {
         method: 'POST',
+        headers: {
+          'Authorization': `Basic ${auth}`
+        },
         body: formData
       });
 
@@ -196,7 +244,7 @@ function App() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold mb-1">Nome Completo</label>
+              <label className="block text-sm font-semibold mb-1">Primeiro e último nome</label>
               <input
                 type="text"
                 name="name"
@@ -208,7 +256,7 @@ function App() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold mb-1">Cargo / Setor</label>
+              <label className="block text-sm font-semibold mb-1">Área / Departamento</label>
               <select
                 name="role"
                 value={userData.role}
@@ -224,14 +272,24 @@ function App() {
 
             <div>
               <label className="block text-sm font-semibold mb-1">Telefone</label>
-              <input
-                type="text"
-                name="phone"
-                value={userData.phone}
-                onChange={handleInputChange}
-                className="w-full border border-gray-300 p-2 rounded focus:ring-2 focus:ring-[#401669] outline-none"
-                placeholder="Ex: 11 99648-6816"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={ddd}
+                  onChange={handleDddChange}
+                  className="w-16 border border-gray-300 p-2 rounded focus:ring-2 focus:ring-[#401669] outline-none text-center"
+                  placeholder="DDD"
+                  maxLength={2}
+                />
+                <input
+                  type="text"
+                  value={phonePart}
+                  onChange={handlePhonePartChange}
+                  className="flex-1 border border-gray-300 p-2 rounded focus:ring-2 focus:ring-[#401669] outline-none"
+                  placeholder="99999-9999"
+                  maxLength={10}
+                />
+              </div>
             </div>
 
             <div>
