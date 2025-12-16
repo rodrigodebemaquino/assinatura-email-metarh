@@ -137,14 +137,8 @@ function App() {
 
     try {
       console.log("Iniciando geração...");
-      let blob;
-      try {
-        blob = await toBlob(signatureRef.current, { quality: 1.0, pixelRatio: 2 });
-      } catch (blobErr) {
-        console.error(blobErr);
-        throw new Error("Erro ao gerar imagem (Possível bloqueio CORS do banner).");
-      }
 
+      const blob = await toBlob(signatureRef.current, { quality: 1.0, pixelRatio: 2 });
       if (!blob) throw new Error("Falha ao gerar o arquivo de imagem.");
 
       const cleanName = userData.name.trim().toLowerCase().split(/\s+/).join('-') || 'assinatura';
@@ -385,7 +379,7 @@ function App() {
             </div>
 
             <p className="text-[10px] text-gray-400 text-center max-w-[600px] mt-2 mb-2">
-              Nota: Se o banner sumir e o fundo ficar branco na imagem gerada abaixo, o plugin de CORS no WordPress pode estar desativado ou mal configurado. A visualização na tela funciona via fallback, mas a geração da imagem requer CORS ativo.
+              <strong>Importante:</strong> O banner lateral NÃO será incluído na imagem gerada devido a restrições de segurança do navegador (CORS). A assinatura gerada conterá apenas sua foto, nome e informações de contato.
             </p>
 
             <div className="text-center space-y-4 w-full max-w-[620px]">

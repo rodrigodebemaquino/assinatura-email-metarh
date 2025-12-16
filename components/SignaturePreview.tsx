@@ -11,41 +11,10 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
   data,
   onPhotoMouseDown,
 }, ref) => {
+  // NOTA: Banner removido da geração devido a CORS
+  // A visualização mostra o banner, mas a imagem gerada não incluirá o banner
+  // para evitar erros de "Tainted Canvas"
   const BANNER_URL = "https://metarh.com.br/wp-content/uploads/assinaturas/Banner-assinatura.png";
-  const [bannerConfig, setBannerConfig] = React.useState<{ src: string; crossOrigin?: "anonymous" }>({
-    src: BANNER_URL,
-    crossOrigin: undefined
-  });
-
-  React.useEffect(() => {
-    let active = true;
-    const loadBanner = async () => {
-      try {
-        // Try to fetch as blob to see if CORS allows us
-        const resp = await fetch(BANNER_URL, { mode: 'cors' });
-        if (!resp.ok) throw new Error("CORS check failed or image missing");
-
-        const blob = await resp.blob();
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          if (active && typeof reader.result === 'string') {
-            // If we can read it, it's safe to use with crossOrigin or as dataURL
-            // Using dataURL is safest for html-to-image
-            setBannerConfig({ src: reader.result, crossOrigin: "anonymous" });
-          }
-        };
-        reader.readAsDataURL(blob);
-      } catch (e) {
-        console.warn("Banner CORS loading failed. Falling back to direct URL (Generator might fail).", e);
-        if (active) {
-          // IMPORTANT: Do NOT use crossOrigin if the server doesn't support it, otherwise image won't load at all.
-          setBannerConfig({ src: BANNER_URL, crossOrigin: undefined });
-        }
-      }
-    };
-    loadBanner();
-    return () => { active = false; };
-  }, []);
 
   return (
     <div
@@ -55,11 +24,10 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
     >
       {/* Background/Banner Layer (Absolute Full Size) */}
       <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
-        {/* Fixed Banner at Right Side */}
+        {/* Fixed Banner at Right Side - SEM crossOrigin para evitar CORS na geração */}
         <img
-          src={bannerConfig.src}
+          src={BANNER_URL}
           alt="Campaign Banner"
-          {...(bannerConfig.crossOrigin ? { crossOrigin: bannerConfig.crossOrigin } : {})}
           className="absolute right-0 h-full w-auto object-cover pointer-events-none"
         />
       </div>
