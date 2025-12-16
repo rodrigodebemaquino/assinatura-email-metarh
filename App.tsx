@@ -145,15 +145,10 @@ function App() {
       const formData = new FormData();
       formData.append('file', file);
 
-      // Credentials provided by user
-      const user = 'Api_assinaturas';
-      const pass = 'YTzKQQ23FbKWFs1YCDwtpqRw';
-      const auth = btoa(`${user}:${pass}`);
-
-      const response = await fetch('https://metarh.com.br/wp-json/assinaturas/v1/upload', {
+      const response = await fetch('https://metarh.com.br/wp-content/uploads/assinaturas/upload.php', {
         method: 'POST',
         headers: {
-          'Authorization': `Basic ${auth}`
+          'Authorization': 'Bearer METARH2026#4886'
         },
         body: formData
       });
@@ -248,6 +243,47 @@ function App() {
           <h2 className="text-xl font-bold border-b pb-2 text-[#401669]">Seus Dados</h2>
 
           <div className="space-y-4">
+
+            {/* Photo Moved to Top */}
+            <div className="pt-2 pb-4 border-b">
+              <label className="block text-sm font-bold mb-2">Sua Foto</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-[#401669] hover:file:bg-purple-100"
+              />
+
+              {userData.photoUrl && (
+                <div className="mt-4 space-y-4 p-4 bg-gray-100 rounded-lg border border-gray-200">
+                  <p className="text-xs font-bold text-[#401669] uppercase border-b pb-1 mb-2">Ajuste a Foto</p>
+
+                  <div className="flex flex-col gap-4">
+                    <div className="text-sm text-gray-600 bg-white p-2 rounded border border-gray-200 flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#401669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M19 9l3 3-3 3M9 19l3 3 3-3M2 12h20M12 2v20" /></svg>
+                      <span>Clique e arraste a foto na visualização ao lado para posicionar.</span>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-xs font-bold text-gray-600">Zoom</span>
+                        <span className="text-xs bg-gray-200 px-2 rounded">{Math.round(userData.photoScale * 100)}%</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="1"
+                        max="3"
+                        step="0.05"
+                        value={userData.photoScale}
+                        onChange={(e) => setUserData(prev => ({ ...prev, photoScale: parseFloat(e.target.value) }))}
+                        className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-[#401669]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div>
               <label className="block text-sm font-semibold mb-1">Primeiro e último nome</label>
               <input
@@ -309,46 +345,6 @@ function App() {
               />
             </div>
 
-            <div className="pt-4 border-t">
-              <label className="block text-sm font-bold mb-2">Sua Foto</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoUpload}
-                className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-[#401669] hover:file:bg-purple-100"
-              />
-
-              {userData.photoUrl && (
-                <div className="mt-4 space-y-4 p-4 bg-gray-100 rounded-lg border border-gray-200">
-                  <p className="text-xs font-bold text-[#401669] uppercase border-b pb-1 mb-2">Ajuste a Foto</p>
-
-                  {/* Didactic Controls: Cursor text and Zoom */}
-                  <div className="flex flex-col gap-4">
-                    <div className="text-sm text-gray-600 bg-white p-2 rounded border border-gray-200 flex items-center gap-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#401669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M19 9l3 3-3 3M9 19l3 3 3-3M2 12h20M12 2v20" /></svg>
-                      <span>Clique e arraste a foto na visualização ao lado para posicionar.</span>
-                    </div>
-
-                    {/* Zoom */}
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-xs font-bold text-gray-600">Zoom</span>
-                        <span className="text-xs bg-gray-200 px-2 rounded">{Math.round(userData.photoScale * 100)}%</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="1"
-                        max="3"
-                        step="0.05"
-                        value={userData.photoScale}
-                        onChange={(e) => setUserData(prev => ({ ...prev, photoScale: parseFloat(e.target.value) }))}
-                        className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-[#401669]"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
         </div>
 

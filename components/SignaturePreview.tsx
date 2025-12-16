@@ -65,8 +65,8 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
       </div>
 
       {/* Foreground Layer: Photo and Info (z-10) */}
-      {/* Changed padding-left from 32px to 12px (20px less) */}
-      <div className="flex-1 flex items-center pl-3 z-10 relative pointer-events-none w-full h-full">
+      {/* Moved content 20px to the right again (pl-3 -> pl-8) */}
+      <div className="flex-1 flex items-center pl-8 z-10 relative pointer-events-none w-full h-full">
 
         {/* Photo Area */}
         {/* Reduced size by 10% (from 150px to 135px) */}
