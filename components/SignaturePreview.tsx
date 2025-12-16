@@ -12,6 +12,29 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
   onPhotoMouseDown,
 }, ref) => {
   const BANNER_URL = "https://metarh.com.br/wp-content/uploads/assinaturas/Banner-assinatura.png";
+  const [bannerSrc, setBannerSrc] = React.useState<string>(BANNER_URL);
+
+  React.useEffect(() => {
+    // Attempt to preload image as blob to avoid CORS taint in canvas
+    const loadBanner = async () => {
+      try {
+        const resp = await fetch(BANNER_URL);
+        if (!resp.ok) throw new Error("Network response was not ok");
+        const blob = await resp.blob();
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (typeof reader.result === 'string') {
+            setBannerSrc(reader.result);
+          }
+        };
+        reader.readAsDataURL(blob);
+      } catch (e) {
+        console.warn("Could not preload banner as Base64 (likely CORS). Using direct URL. Canvas export might fail.", e);
+        // Fallback is already set to BANNER_URL
+      }
+    };
+    loadBanner();
+  }, []);
 
   return (
     <div
@@ -23,8 +46,9 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
       <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
         {/* Fixed Banner at Right Side */}
         <img
-          src={BANNER_URL}
+          src={bannerSrc}
           alt="Campaign Banner"
+          crossOrigin="anonymous"
           className="absolute right-0 h-full w-auto object-cover pointer-events-none"
         />
       </div>
