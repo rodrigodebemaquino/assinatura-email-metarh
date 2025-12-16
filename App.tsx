@@ -164,6 +164,16 @@ function App() {
       const fileName = `${cleanName}-${cleanRole}.png`;
       console.log('Nome do arquivo gerado:', fileName);
 
+      // VALIDAÇÃO: Garantir que nunca seja banner-assinatura.png
+      if (fileName.toLowerCase() === 'banner-assinatura.png') {
+        throw new Error('Erro: Nome de arquivo inválido. Por favor, preencha nome e departamento corretamente.');
+      }
+
+      // Validação adicional: garantir que o nome não está vazio
+      if (!cleanName || !cleanRole) {
+        throw new Error('Por favor, preencha o nome completo e selecione um departamento.');
+      }
+
       const file = new File([blob], fileName, { type: 'image/png' });
 
       const formData = new FormData();

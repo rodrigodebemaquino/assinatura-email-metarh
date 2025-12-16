@@ -70,6 +70,19 @@ if ($fileExtension !== 'png') {
 $fileName = basename($file['name']);
 $fileName = preg_replace('/[^a-z0-9\-\_\.]/i', '', $fileName);
 
+// PROTEÇÃO: Bloquear sobrescrita do banner
+if (strtolower($fileName) === 'banner-assinatura.png') {
+    http_response_code(400);
+    echo json_encode([
+        'error' => 'Nome de arquivo não permitido. O arquivo "banner-assinatura.png" é reservado.',
+        'received_filename' => $fileName
+    ]);
+    exit();
+}
+
+// Log do nome recebido (para debug)
+error_log("Upload recebido: " . $fileName);
+
 // Diretório de destino (mesmo diretório deste script)
 $uploadDir = __DIR__ . '/';
 $uploadPath = $uploadDir . $fileName;
