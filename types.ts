@@ -7,6 +7,7 @@ export interface UserData {
   photoScale: number;
   photoX: number;
   photoY: number;
+  showQrCode: boolean;
 }
 
 export interface AdminData {
@@ -22,4 +23,5 @@ export const DEFAULT_USER_DATA: UserData = {
   photoScale: 1,
   photoX: 0,
   photoY: 0,
+  showQrCode: true,
 };

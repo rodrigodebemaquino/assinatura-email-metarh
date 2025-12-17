@@ -129,14 +129,16 @@ const SignaturePreview = forwardRef<HTMLDivElement, SignaturePreviewProps>(({
         </div>
 
         {/* QR Code WhatsApp - Posicionado à direita do texto, na área branca */}
-        <div className="absolute p-1 bg-white border-2 border-[#401669] rounded-lg" style={{ left: '360px', top: '71%', transform: 'translateY(-50%)', zIndex: 10 }}>
-          <QRCodeSVG
-            value={`https://wa.me/55${data.phone.replace(/\D/g, '')}`}
-            size={65}
-            level="M"
-            includeMargin={false}
-          />
-        </div>
+        {data.showQrCode && (
+          <div className="absolute p-1 bg-white border-2 border-[#401669] rounded-lg" style={{ left: '360px', top: '71%', transform: 'translateY(-50%)', zIndex: 10 }}>
+            <QRCodeSVG
+              value={`https://wa.me/55${data.phone.replace(/\D/g, '')}`}
+              size={65}
+              level="M"
+              includeMargin={false}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

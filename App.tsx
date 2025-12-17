@@ -395,6 +395,19 @@ function App() {
               </div>
             </div>
 
+            <div className="flex items-center gap-2 pt-1">
+              <input
+                type="checkbox"
+                id="showQrCode"
+                checked={userData.showQrCode}
+                onChange={(e) => setUserData(prev => ({ ...prev, showQrCode: e.target.checked }))}
+                className="w-4 h-4 text-[#401669] border-gray-300 rounded focus:ring-[#401669] accent-[#401669]"
+              />
+              <label htmlFor="showQrCode" className="text-sm font-semibold select-none cursor-pointer text-gray-700">
+                Incluir QR Code do WhatsApp
+              </label>
+            </div>
+
             <div>
               <label className="block text-sm font-semibold mb-1">Website</label>
               <input
