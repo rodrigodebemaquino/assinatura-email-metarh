@@ -146,7 +146,7 @@ function App() {
       // Gerar imagem com alta qualidade (pixelRatio 3 = 3x resolução)
       const blob = await toBlob(signatureGenerationRef.current, {
         quality: 1.0,      // Qualidade máxima
-        pixelRatio: 3,     // 3x resolução (1860x750px)
+        pixelRatio: 1,     // 1x resolução (600x250px) - Tamanho ideal para assinatura
         cacheBust: true    // Evita cache
       });
       if (!blob) throw new Error("Falha ao gerar o arquivo de imagem.");
@@ -276,7 +276,7 @@ function App() {
     "Gente e Gestão",
     "Jurídico",
     "Marketing",
-    "Pponto",
+    "Ponto",
     "Projetos e TI",
     "Qualidade e Experiência",
     "Recrutamento e Seleção"
