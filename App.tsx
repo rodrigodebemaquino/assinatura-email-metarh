@@ -9,6 +9,7 @@ function App() {
   const [userData, setUserData] = useState<UserData>(DEFAULT_USER_DATA);
   const [ddd, setDdd] = useState('');
   const [phonePart, setPhonePart] = useState('');
+  const [useCampaignBanner, setUseCampaignBanner] = useState(true);
 
   // Drag state
   const [dragTarget, setDragTarget] = useState<'photo' | null>(null);
@@ -360,17 +361,19 @@ function App() {
 
             <div>
               <label className="block text-sm font-semibold mb-1">Área / Departamento</label>
-              <select
+              <input
+                list="roles-list"
                 name="role"
                 value={userData.role}
                 onChange={handleInputChange}
                 className="w-full border border-gray-300 p-2 rounded focus:ring-2 focus:ring-[#401669] outline-none bg-white"
-              >
-                <option value="">Selecione...</option>
+                placeholder="Selecione ou digite..."
+              />
+              <datalist id="roles-list">
                 {roles.map(role => (
-                  <option key={role} value={role}>{role}</option>
+                  <option key={role} value={role} />
                 ))}
-              </select>
+              </datalist>
             </div>
 
             <div>
@@ -420,6 +423,19 @@ function App() {
               />
             </div>
 
+            <div className="flex items-center gap-2 pt-1 border-t mt-4 border-gray-200">
+              <input
+                type="checkbox"
+                id="useCampaignBanner"
+                checked={useCampaignBanner}
+                onChange={(e) => setUseCampaignBanner(e.target.checked)}
+                className="w-4 h-4 text-[#401669] border-gray-300 rounded focus:ring-[#401669] accent-[#401669]"
+              />
+              <label htmlFor="useCampaignBanner" className="text-sm font-semibold select-none cursor-pointer text-gray-700">
+                Utilizar Banner de Campanha
+              </label>
+            </div>
+
           </div>
         </div>
 
@@ -432,6 +448,7 @@ function App() {
                 ref={signatureRef}
                 data={userData}
                 onPhotoMouseDown={handlePhotoMouseDown}
+                useCampaignBanner={useCampaignBanner}
               />
             </div>
 
@@ -441,6 +458,7 @@ function App() {
                 ref={signatureGenerationRef}
                 data={userData}
                 showBanner={true}
+                useCampaignBanner={useCampaignBanner}
               />
             </div>
 
