@@ -9,7 +9,7 @@ function App() {
   const [userData, setUserData] = useState<UserData>(DEFAULT_USER_DATA);
   const [ddd, setDdd] = useState('');
   const [phonePart, setPhonePart] = useState('');
-  const [useCampaignBanner, setUseCampaignBanner] = useState(true);
+  const [useCampaignBanner, setUseCampaignBanner] = useState(false);
 
   // Drag state
   const [dragTarget, setDragTarget] = useState<'photo' | null>(null);
